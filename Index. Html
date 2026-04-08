@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HouseAgent</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <h1>🏠 HouseAgent</h1>
+        <p>Find your perfect home easily</p>
+    </header>
+
+    <section class="search">
+        <input type="text" id="searchInput" placeholder="Search by location...">
+        <button onclick="searchHouse()">Search</button>
+    </section>
+
+    <section class="listings" id="listings">
+        <!-- Houses will appear here -->
+    </section>
+
+    <section class="add-property">
+        <h2>Add Property</h2>
+        <input type="text" id="title" placeholder="House Title">
+        <input type="text" id="location" placeholder="Location">
+        <input type="number" id="price" placeholder="Price">
+        <button onclick="addProperty()">Add Property</button>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
