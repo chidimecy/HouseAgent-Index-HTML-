@@ -1,0 +1,42 @@
+let properties = [];
+
+function addProperty() {
+    let title = document.getElementById("title").value;
+    let location = document.getElementById("location").value;
+    let price = document.getElementById("price").value;
+
+    if (title === "" || location === "" || price === "") {
+        alert("Please fill all fields");
+        return;
+    }
+
+    let property = { title, location, price };
+    properties.push(property);
+
+    displayProperties();
+}
+
+function displayProperties(list = properties) {
+    let listings = document.getElementById("listings");
+    listings.innerHTML = "";
+
+    list.forEach((prop) => {
+        listings.innerHTML += `
+            <div class="card">
+                <h3>${prop.title}</h3>
+                <p>📍 ${prop.location}</p>
+                <p>💰 ₦${prop.price}</p>
+            </div>
+        `;
+    });
+}
+
+function searchHouse() {
+    let searchValue = document.getElementById("searchInput").value.toLowerCase();
+
+    let filtered = properties.filter(p =>
+        p.location.toLowerCase().includes(searchValue)
+    );
+
+    displayProperties(filtered);
+}
