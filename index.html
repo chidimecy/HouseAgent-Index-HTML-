@@ -3,15 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HouseAgentPH - With Direction</title>
+<title>HouseAgentPH - Home Navigation</title>
 <style>
-body{font-family:Arial,sans-serif;margin:0;background:#f2f2f2}
-.header{background:#0a7a0a;color:white;padding:12px;text-align:center;position:sticky;top:0;z-index:100}
+body{font-family:Arial,sans-serif;margin:0;background:#f2f2f2;padding-bottom:70px}
+.header{background:#0a7a0a;color:white;padding:12px;text-align:center;position:sticky;top:0;z-index:100;cursor:pointer}
+.header h1{margin:0;font-size:22px;cursor:pointer}
+.header h1:active{opacity:0.7}
 .container{padding:12px;max-width:650px;margin:auto}
 .search-row{background:white;padding:10px;border-radius:12px;margin-bottom:12px;display:flex;gap:8px}
 .search-row input{flex:1;padding:12px;border:1px solid #ddd;border-radius:8px}
 .search-row button{padding:12px 16px;background:#0a7a0a;color:white;border:none;border-radius:8px;font-weight:bold}
-.filter-bar{background:white;padding:10px;border-radius:10px;margin-bottom:12px;display:flex;justify-content:space-between;font-size:12px}
+.filter-bar{background:white;padding:10px;border-radius:10px;margin-bottom:12px;display:flex;justify-content:space-between;font-size:12px;align-items:center}
 .upload-box{background:#fff;border:2px dashed #0a7a0a;padding:18px;text-align:center;border-radius:12px;margin-bottom:14px}
 .upload-btn{display:inline-block;background:#0a7a0a;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold}
 .card{background:white;border-radius:12px;overflow:hidden;margin-bottom:14px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
@@ -21,6 +23,10 @@ body{font-family:Arial,sans-serif;margin:0;background:#f2f2f2}
 .comment-box{background:#f9f9f9;border:1px solid #eee;border-radius:8px;padding:10px;margin-top:10px}
 .dir-btn{display:block;width:100%;text-align:center;padding:12px;background:#0a7a0a;color:white;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:8px;font-size:14px}
 .map-btn{display:block;width:100%;text-align:center;padding:10px;background:#e6f0ff;color:#0a7a0a;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:6px;font-size:13px}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:white;border-top:1px solid #ddd;display:flex;justify-content:space-around;padding:8px 0;z-index:200}
+.bottom-nav button{border:none;background:none;font-size:12px;display:flex;flex-direction:column;align-items:center;color:#555;cursor:pointer}
+.bottom-nav button.active{color:#0a7a0a;font-weight:bold}
+.bottom-nav.icon{font-size:20px}
 #locationGate{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;display:flex;align-items:center;justify-content:center;padding:15px}
 .gateBox{background:#fff;width:100%;max-width:420px;border-radius:16px;padding:20px}
 .gateBox select,.gateBox input,.gateBox textarea{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc;box-sizing:border-box}
@@ -31,31 +37,31 @@ body{font-family:Arial,sans-serif;margin:0;background:#f2f2f2}
 </style>
 </head>
 <body>
-<div class="header"><h1 style="margin:0">HouseAgentPH</h1><div style="font-size:11px" id="userLocationDisplay">Choose your area</div></div>
+
+<!-- HEADER - NOW HOME BUTTON -->
+<div class="header" onclick="goHome()" title="Tap to go Home">
+<h1>🏠 HouseAgentPH</h1>
+<div style="font-size:11px" id="userLocationDisplay">Choose your area - Tap logo to go Home</div>
+</div>
+
 <div class="container">
 <div class="search-row"><input id="searchInput" placeholder="Search e.g. 2 bed for Rumuola"><button onclick="searchHouses()">Search</button></div>
 <div class="filter-bar"><span id="filterText">Showing for your areas</span><button onclick="changeArea()" style="border:1px solid #0a7a0a;color:#0a7a0a;background:white;padding:5px 10px;border-radius:6px">Change Area</button></div>
 <div class="upload-box"><h3 style="margin:0 0 6px">Have house for rent/sale?</h3><p style="font-size:12px;color:#555">Add price, direction & pictures</p><a href="#" class="upload-btn" onclick="checkUpload();return false">+ Upload House</a></div>
 
 <div id="houseList">
-<div class="card" data-area="Rumuola"><img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be"><div class="card-body"><span class="badge">For Rent</span> <b>2 Bedroom - Rumuola</b><br><small>Port Harcourt</small><br><b style="color:#0a7a0a">₦800,000 / year</b>
-<div class="comment-box">
-<b style="font-size:13px">📍 Direction / Comment:</b><br>
-<small>Behind Rumuola Market, close to Genesis, 2nd street by left, green gate. Water dey, light dey.</small>
-<a href="https://www.google.com/maps/dir/?api=1&destination=Rumuola+Market+Port+Harcourt" target="_blank" class="dir-btn">🧭 Get Direction - Open in Google Maps</a>
-<a href="https://www.google.com/maps/search/?api=1&query=Rumuola+Market+Port+Harcourt" target="_blank" class="map-btn">📍 View on Map</a>
+<div class="card" data-area="Rumuola"><img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be"><div class="card-body"><span class="badge">For Rent</span> <b>2 Bedroom - Rumuola</b><br><small>Port Harcourt</small><br><b style="color:#0a7a0a">₦800,000 / year</b><div class="comment-box"><b style="font-size:13px">📍 Direction / Comment:</b><br><small>Behind Rumuola Market, close to Genesis, 2nd street by left, green gate.</small><a href="https://www.google.com/maps/dir/?api=1&destination=Rumuola+Market+Port+Harcourt" target="_blank" class="dir-btn">🧭 Get Direction</a></div></div></div>
+<div class="card" data-area="Rumuigbo"><img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2"><div class="card-body"><span class="badge">For Rent</span> <b>2 Bedroom - Rumuigbo</b><br><small>Obio-Akpor</small><br><b style="color:#0a7a0a">₦750,000 / year</b><div class="comment-box"><b style="font-size:13px">📍 Direction / Comment:</b><br><small>Behind Rumuigbo Model School, 2nd street after market, blue gate.</small><a href="https://www.google.com/maps/dir/?api=1&destination=Rumuigbo+Port+Harcourt" target="_blank" class="dir-btn">🧭 Get Direction</a></div></div></div>
+<div class="card" data-area="Omoku Town"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"><div class="card-body"><span class="badge">For Rent</span> <b>Self Contain - Omoku Town</b><br><small>Ogba/Egbema/Ndoni</small><br><b style="color:#0a7a0a">₦300,000 / year</b><div class="comment-box"><b style="font-size:13px">📍 Direction / Comment:</b><br><small>Behind Omoku General Hospital, near UBA.</small><a href="https://www.google.com/maps/dir/?api=1&destination=Omoku+General+Hospital+Omoku" target="_blank" class="dir-btn">🧭 Get Direction</a></div></div></div>
 </div>
-</div></div>
+</div>
 
-<div class="card" data-area="Omoku Town"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"><div class="card-body"><span class="badge">For Rent</span> <b>Self Contain - Omoku Town</b><br><small>Ogba/Egbema/Ndoni</small><br><b style="color:#0a7a0a">₦300,000 / year</b>
-<div class="comment-box">
-<b style="font-size:13px">📍 Direction / Comment:</b><br>
-<small>Behind Omoku General Hospital, near UBA, 2nd compound left. Perimeter fence, borehole.</small>
-<a href="https://www.google.com/maps/dir/?api=1&destination=Omoku+General+Hospital+Omoku" target="_blank" class="dir-btn">🧭 Get Direction - Open in Google Maps</a>
-<a href="https://www.google.com/maps/search/?api=1&query=Omoku+General+Hospital" target="_blank" class="map-btn">📍 View on Map</a>
-</div>
-</div></div>
-</div>
+<!-- BOTTOM HOME NAVIGATION -->
+<div class="bottom-nav">
+<button class="active" onclick="goHome()"><span class="icon">🏠</span>Home</button>
+<button onclick="document.getElementById('searchInput').focus()"><span class="icon">🔍</span>Search</button>
+<button onclick="checkUpload()"><span class="icon">➕</span>Upload</button>
+<button onclick="changeArea()"><span class="icon">📍</span>Areas</button>
 </div>
 
 <div id="locationGate"><div class="gateBox">
@@ -63,13 +69,47 @@ body{font-family:Arial,sans-serif;margin:0;background:#f2f2f2}
 <div id="step2" style="display:none"><h3>🏠 Where you wan find house?</h3><select id="searchLGA"><option>Select LGA</option></select><select id="searchArea"><option>Select Area</option></select><button onclick="addSearchArea()" style="width:100%;padding:10px;border:1px dashed #0a7a0a;background:#f0fff0;border-radius:8px;margin-top:6px">+ Add Area</button><div id="selectedAreas" style="margin-top:10px"></div><button class="gateBtn" id="saveAllBtn" disabled>Save & See Houses</button></div>
 </div></div>
 
-<div id="uploadModal"><div class="modalBox"><h3>🏠 Upload House</h3><select id="upFor"><option>For Rent</option><option>For Sale</option></select><select id="upType"><option>Self Contain</option><option>1 Bedroom</option><option>2 Bedroom</option><option>3 Bedroom</option><option>Duplex</option></select><input id="upPrice" type="number" placeholder="Price e.g. 300000"><input id="upState" placeholder="State e.g. Rivers"><input id="upLGA" placeholder="LGA e.g. Obio-Akpor"><input id="upArea" placeholder="Area e.g. Rumuola"><textarea id="upDirection" placeholder="Clear direction / Comment: Behind Omoku Market, close to UBA, 2nd compound left, green gate - Perimeter, water, light" style="height:90px"></textarea><input id="upMapLink" placeholder="Paste Google Map link (optional)"><input type="file" multiple accept="image/*"><input id="upPhone" placeholder="Phone e.g. 0803xxxxxxx"><button onclick="submitHouse()" class="gateBtn">Publish House</button><button onclick="document.getElementById('uploadModal').style.display='none'" style="width:100%;padding:12px;background:#eee;border:none;border-radius:10px;margin-top:8px">Cancel</button></div></div>
+<div id="uploadModal"><div class="modalBox"><h3>🏠 Upload House</h3><select id="upFor"><option>For Rent</option><option>For Sale</option></select><select id="upType"><option>Self Contain</option><option>1 Bedroom</option><option>2 Bedroom</option><option>3 Bedroom</option><option>Duplex</option></select><input id="upPrice" type="number" placeholder="Price e.g. 300000"><input id="upState" placeholder="State e.g. Rivers"><input id="upLGA" placeholder="LGA e.g. Obio-Akpor"><input id="upArea" placeholder="Area e.g. Rumuola"><textarea id="upDirection" placeholder="Clear direction / Comment" style="height:90px"></textarea><input id="upMapLink" placeholder="Paste Google Map link (optional)"><input type="file" multiple accept="image/*"><input id="upPhone" placeholder="Phone e.g. 0803xxxxxxx"><button onclick="submitHouse()" class="gateBtn">Publish House</button><button onclick="document.getElementById('uploadModal').style.display='none'" style="width:100%;padding:12px;background:#eee;border:none;border-radius:10px;margin-top:8px">Cancel</button></div></div>
 
 <script>
-const data={rivers:{'Port Harcourt':['GRA Phase 1','GRA Phase 2','Rumuola','Diobu','Trans-Amadi','Woji'],'Obio-Akpor':['Rumuokoro','Eliozu','Mgbuoba','Choba','Rumuigbo'],'Ogba/Egbema/Ndoni':['Omoku Town','Egbema','Obrikom','Ndoni']}};
+const data={rivers:{'Port Harcourt':['GRA Phase 1','GRA Phase 2','Rumuola','Diobu','Trans-Amadi','Woji'],'Obio-Akpor':['Rumuokoro','Eliozu','Mgbuoba','Choba','Rumuigbo','Rumuokoro'],'Ogba/Egbema/Ndoni':['Omoku Town','Egbema','Obrikom','Ndoni']}};
 let curResidence=null,targets=[];
-if(localStorage.getItem('ha_location')){document.getElementById('locationGate').style.display='none';try{const d=JSON.parse(localStorage.getItem('ha_location'));document.getElementById('userLocationDisplay').innerText=`Stay: ${d.current.area} | Searching: ${d.targets.map(t=>t.area).join(', ')}`;filterHouses(d.targets.map(t=>t.area))}catch(e){}}
-function filterHouses(areas){document.querySelectorAll('.card').forEach(c=>{const a=c.getAttribute('data-area');c.style.display=areas.includes(a)?'block':'none'});document.getElementById('filterText').innerText=`Showing for: ${areas.join(', ')}`}
+function goHome(){
+  document.getElementById('searchInput').value='';
+  document.getElementById('uploadModal').style.display='none';
+  const saved=localStorage.getItem('ha_location');
+  if(saved){
+    try{
+      const d=JSON.parse(saved);
+      filterHouses(d.targets.map(t=>t.area));
+      document.getElementById('userLocationDisplay').innerText=`Stay: ${d.current.area} | Searching: ${d.targets.map(t=>t.area).join(', ')} - Tap logo for Home`;
+    }catch(e){}
+  } else {
+    document.querySelectorAll('.card').forEach(c=>c.style.display='block');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+  // update bottom nav active
+  document.querySelectorAll('.bottom-nav button').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.bottom-nav button')[0].classList.add('active');
+}
+
+if(localStorage.getItem('ha_location')){document.getElementById('locationGate').style.display='none';try{const d=JSON.parse(localStorage.getItem('ha_location'));document.getElementById('userLocationDisplay').innerText=`Stay: ${d.current.area} | Searching: ${d.targets.map(t=>t.area).join(', ')} - Tap logo for Home`;filterHouses(d.targets.map(t=>t.area))}catch(e){}}
+
+function filterHouses(areas){
+  let count=0;
+  document.querySelectorAll('.card').forEach(c=>{const a=c.getAttribute('data-area');const show=areas.includes(a);c.style.display=show?'block':'none';if(show)count++});
+  document.getElementById('filterText').innerText=`Showing for: ${areas.join(', ')}`;
+  let noMsg=document.getElementById('noHouseMsg');
+  if(count==0){
+    if(!noMsg){
+      const list=document.getElementById('houseList');
+      const div=document.createElement('div');
+      div.id='noHouseMsg';div.style='background:white;padding:20px;border-radius:12px;text-align:center;margin-top:10px';
+      div.innerHTML=`<h3>No house yet for ${areas.join(', ')}</h3><p style="color:#666;font-size:13px">Be first to upload!</p><a href="#" onclick="checkUpload();return false" style="display:inline-block;background:#0a7a0a;color:white;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold">+ Upload for ${areas[0]}</a>`;
+      list.prepend(div);
+    }
+  }else{if(noMsg)noMsg.remove();}
+}
 const cs=document.getElementById('currentState'),cl=document.getElementById('currentLGA'),ca=document.getElementById('currentArea');
 cs.onchange=()=>{cl.innerHTML='<option>Select LGA</option>';Object.keys(data[cs.value]||{}).forEach(k=>cl.innerHTML+=`<option>${k}</option>`)};
 cl.onchange=()=>{const areas=(data[cs.value]||{})[cl.value]||[];ca.innerHTML='<option>Select Area</option>';areas.forEach(a=>ca.innerHTML+=`<option>${a}</option>`)};
@@ -93,12 +133,13 @@ function submitHouse(){
   const list=document.getElementById('houseList');
   const newCard=document.createElement('div');
   newCard.className='card';newCard.setAttribute('data-area',area);
-  newCard.innerHTML=`<img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"><div class="card-body"><span class="badge">For Rent</span> <b>${type} - ${area}</b><br><small>${lga}</small><br><b style="color:#0a7a0a">₦${price} / year</b><div class="comment-box"><b style="font-size:13px">📍 Direction / Comment:</b><br><small>${dir}</small><a href="${directionLink}" target="_blank" class="dir-btn">🧭 Get Direction - Open in Google Maps</a><a href="${mapLink}" target="_blank" class="map-btn">📍 View on Map</a></div></div>`;
+  newCard.innerHTML=`<img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"><div class="card-body"><span class="badge">For Rent</span> <b>${type} - ${area}</b><br><small>${lga}</small><br><b style="color:#0a7a0a">₦${price} / year</b><div class="comment-box"><b style="font-size:13px">📍 Direction / Comment:</b><br><small>${dir}</small><a href="${directionLink}" target="_blank" class="dir-btn">🧭 Get Direction</a><a href="${mapLink}" target="_blank" class="map-btn">📍 View on Map</a></div></div>`;
   list.prepend(newCard);
+  const noMsg=document.getElementById('noHouseMsg');if(noMsg)noMsg.remove();
   document.getElementById('uploadModal').style.display='none';
-  alert('✅ Published with Get Direction button inside comment!');
+  goHome();
 }
-function searchHouses(){const q=document.getElementById('searchInput').value.toLowerCase();if(!q)return;document.querySelectorAll('.card').forEach(c=>{c.style.display=c.innerText.toLowerCase().includes(q)?'block':'none'})}
+function searchHouses(){const q=document.getElementById('searchInput').value.toLowerCase();if(!q){goHome();return}document.querySelectorAll('.card').forEach(c=>{c.style.display=c.innerText.toLowerCase().includes(q)?'block':'none'})}
 </script>
 </body>
 </html>
