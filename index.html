@@ -34,4 +34,177 @@ body{font-family:Arial,sans-serif;margin:0;background:#f2f2f2;padding-bottom:80p
 .gateBtn{width:100%;padding:14px;background:#0a7a0a;color:#fff;border:none;border-radius:10px;margin-top:12px;font-weight:bold;cursor:pointer}
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.9);z-index:10000;overflow-y:auto;padding:15px}
 .modalBox{background:#fff;max-width:580px;margin:20px auto;border-radius:16px;padding:20px}
-.file-upload-area{border:2px dashed #0a7a0a;padding:12px;border-radius:10px
+.file-upload-area{border:2px dashed #0a7a0a;padding:12px;border-radius:10px;text-align:center;margin:10px 0;background:#f0fff0}
+.preview-img{width:60px;height:60px;object-fit:cover;border-radius:6px;border:1px solid #ddd}
+</style>
+</head>
+<body>
+
+<div class="header" onclick="goHome()">
+<h1>🏠 HouseAgentPH</h1>
+<div style="font-size:11px" id="userLocationDisplay">🏠 HouseAgentPH - All Cities | Tap Change Area to Filter</div>
+</div>
+
+<div class="container">
+<div class="search-row"><input id="searchInput" placeholder="Search e.g. 2 bed for Rumuola"><button onclick="searchHouses()">Search</button></div>
+<div class="filter-bar"><span id="filterText">Home - All Houses</span><button onclick="changeArea()" style="border:1px solid #0a7a0a;color:#0a7a0a;background:white;padding:5px 10px;border-radius:6px;cursor:pointer">Change Area</button></div>
+<div class="home-tabs"><button id="btnLandlord" class="tab-btn active" onclick="showTab('landlord')">🏠 Landlord Houses</button><button id="btnTenant" class="tab-btn" onclick="showTab('tenant')">🙋 Tenants Looking</button></div>
+
+<div id="landlordSection">
+<div class="upload-box"><h3 style="margin:0 0 6px">🏠 Landlords: Have house?</h3><p style="font-size:12px;color:#555">Post with standard form + pictures</p><a href="#" onclick="checkUpload();return false" style="display:inline-block;background:#0a7a0a;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold">+ Upload House</a></div>
+<div id="houseList">
+<div class="card" data-area="Rumuola"><img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be"><div class="card-body"><span class="badge">For Rent</span> <b>2 Bedroom - Rumuola</b><br><small>Port Harcourt - 2 beds</small><br><b style="color:#0a7a0a">₦800,000 / year</b><div class="comment-box"><b style="font-size:13px">📍 Direction / Comment:</b><br><small>Behind Rumuola Market, close to Genesis, 2nd street by left, green gate.</small><a href="https://www.google.com/maps/dir/?api=1&destination=Rumuola+Market+Port+Harcourt" target="_blank" class="dir-btn">🧭 Get Direction</a></div></div></div>
+</div>
+</div>
+
+<div id="tenantSection" style="display:none">
+<div style="background:white;padding:12px;border-radius:12px;margin-bottom:12px">
+<h3 style="margin:0 0 8px;font-size:14px">🔍 Where you wan search house? (Dropdown Filter)</h3>
+<div style="display:flex;gap:6px;flex-wrap:wrap">
+<select id="tenantFilterState" style="flex:1;min-width:90px;padding:10px;border-radius:8px;border:1px solid #ccc"><option value="">State</option><option value="rivers">Rivers</option><option value="lagos">Lagos</option><option value="fct_abuja">Abuja</option><option value="kano">Kano</option><option value="oyo">Oyo</option><option value="anambra">Anambra</option><option value="enugu">Enugu</option><option value="delta">Delta</option><option value="imo">Imo</option><option value="edo">Edo</option></select>
+<select id="tenantFilterLGA" style="flex:1;min-width:90px;padding:10px;border-radius:8px;border:1px solid #ccc"><option>LGA</option></select>
+<select id="tenantFilterArea" style="flex:1;min-width:90px;padding:10px;border-radius:8px;border:1px solid #ccc"><option>Area</option></select>
+</div>
+<button onclick="filterTenantSearch()" style="width:100%;padding:12px;background:#0066cc;color:white;border:none;border-radius:8px;margin-top:8px;font-weight:bold">🔍 Search Houses for This Area</button>
+</div>
+<div style="background:#fff;border:2px dashed #0066cc;padding:18px;text-align:center;border-radius:12px;margin-bottom:14px"><h3 style="margin:0 0 6px;color:#0066cc">🙋 Tenants: Looking for house?</h3><a href="#" style="display:inline-block;background:#0066cc;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold" onclick="checkTenantPost();return false">+ Post What You Need</a></div>
+<div id="tenantList"></div>
+</div>
+</div>
+
+<div class="bottom-nav"><button class="active" onclick="goHome()"><span>🏠</span>Home</button><button onclick="showTab('landlord')"><span>🏘️</span>Houses</button><button onclick="showTab('tenant')"><span>🙋</span>Tenants</button><button onclick="checkUpload()"><span>➕</span>Upload</button></div>
+
+<!-- LOCATION GATE - HIDDEN FIRST TIME -->
+<div id="locationGate"><div class="gateBox"><div id="step1"><h3>📍 Where you dey stay now?</h3><select id="currentState"><option value="">Select State</option><option value="rivers">Rivers</option><option value="lagos">Lagos</option><option value="fct_abuja">Abuja</option><option value="kano">Kano</option><option value="oyo">Oyo</option><option value="anambra">Anambra</option><option value="enugu">Enugu</option><option value="delta">Delta</option><option value="imo">Imo</option><option value="edo">Edo</option><option value="akwa_ibom">Akwa Ibom</option></select><select id="currentLGA"><option>Select State First</option></select><select id="currentArea"><option>Select LGA First</option></select><button class="gateBtn" id="toStep2" disabled>Next →</button><button onclick="document.getElementById('locationGate').style.display='none'" style="width:100%;padding:10px;background:#eee;border:none;border-radius:8px;margin-top:8px">Skip - See All Houses</button></div><div id="step2" style="display:none"><h3>🏠 Where you wan find house?</h3><select id="searchLGA"><option>Select LGA</option></select><select id="searchArea"><option>Select Area</option></select><button onclick="addSearchArea()" style="width:100%;padding:10px;border:1px dashed #0a7a0a;background:#f0fff0;border-radius:8px;margin-top:6px">+ Add Area</button><div id="selectedAreas" style="margin-top:10px"></div><button class="gateBtn" id="saveAllBtn" disabled>Save & See Houses</button></div></div></div>
+
+<!-- STANDARD LANDLORD UPLOAD FORM -->
+<div id="uploadModal" class="modal"><div class="modalBox">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+<h3 style="margin:0">🏠 Upload Property For Rent</h3>
+<button onclick="closeUploadModal()" style="border:none;background:#eee;border-radius:50%;width:32px;height:32px;font-weight:bold">✕</button>
+</div>
+<small style="color:#666">Standard form - fill everything</small>
+
+<div style="background:#f8fff8;padding:12px;border-radius:10px;margin:12px 0;border-left:4px solid #0a7a0a">
+<b style="font-size:13px">📋 SECTION 1: PROPERTY DETAILS</b>
+<div style="display:flex;gap:6px;margin-top:8px">
+<select id="upFor" style="flex:1;padding:12px;border-radius:8px;border:1px solid #ccc"><option>For Rent</option><option>For Sale</option><option>Short Let</option></select>
+<select id="upType" style="flex:1;padding:12px;border-radius:8px;border:1px solid #ccc"><option>Self Contain</option><option>1 Bedroom Flat</option><option>2 Bedroom Flat</option><option>3 Bedroom Flat</option><option>Duplex</option><option>Shop</option></select>
+</div>
+<input id="upTitle" placeholder="Title e.g. Newly Built 2 Bed Flat at Rumuola" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+<div style="display:flex;gap:6px">
+<input id="upBed" type="number" placeholder="Bedrooms" style="flex:1;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+<input id="upBath" type="number" placeholder="Bathrooms" style="flex:1;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+<input id="upToilet" type="number" placeholder="Toilets" style="flex:1;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+</div>
+<input id="upPrice" type="number" placeholder="Price Per Year e.g. 800000" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+<input id="upCaution" type="number" placeholder="Caution Fee (optional)" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+</div>
+
+<div style="background:#f0f7ff;padding:12px;border-radius:10px;margin:12px 0;border-left:4px solid #0066cc">
+<b style="font-size:13px">📍 SECTION 2: LOCATION</b>
+<div style="display:flex;gap:6px;margin-top:8px">
+<select id="upState" style="flex:1;padding:12px;border-radius:8px;border:1px solid #ccc"><option value="">State</option><option value="Rivers">Rivers</option><option value="Lagos">Lagos</option><option value="FCT Abuja">FCT Abuja</option><option value="Kano">Kano</option><option value="Oyo">Oyo</option><option value="Anambra">Anambra</option><option value="Enugu">Enugu</option><option value="Delta">Delta</option><option value="Imo">Imo</option><option value="Edo">Edo</option></select>
+<select id="upLGA" style="flex:1;padding:12px;border-radius:8px;border:1px solid #ccc"><option value="">LGA</option><option>Port Harcourt</option><option>Obio-Akpor</option><option>Ikeja</option><option>Lekki</option></select>
+</div>
+<input id="upArea" placeholder="Area e.g. Rumuola" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+<input id="upAddress" placeholder="Full Address e.g. No 12 Ada George" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+<textarea id="upDirection" placeholder="Direction / Comment: e.g. Behind Rumuola Market, green gate" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc;height:90px"></textarea>
+<input id="upMapLink" placeholder="Google Map Link (optional)" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+</div>
+
+<div style="background:#fffaf0;padding:12px;border-radius:10px;margin:12px 0;border-left:4px solid #ff9900">
+<b style="font-size:13px">⚙️ SECTION 3: FACILITIES</b>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;font-size:13px">
+<label><input type="checkbox" id="fWater"> Water</label>
+<label><input type="checkbox" id="fLight"> Light</label>
+<label><input type="checkbox" id="fFenced"> Fenced</label>
+<label><input type="checkbox" id="fParking"> Parking</label>
+<label><input type="checkbox" id="fTiled"> Tiled</label>
+<label><input type="checkbox" id="fSecurity"> Security</label>
+</div>
+<textarea id="upDesc" placeholder="Full Description e.g. Newly built, prepaid meter, running water" style="width:100%;padding:12px;margin:8px 0;border-radius:8px;border:1px solid #ccc;height:80px"></textarea>
+</div>
+
+<div class="file-upload-area">
+<b style="font-size:13px">📸 SECTION 4: PROPERTY PICTURES</b><br>
+<input type="file" id="upImages" multiple accept="image/*" hidden onchange="previewImages(this)">
+<label for="upImages" style="display:block;background:#0a7a0a;color:#fff;padding:12px;border-radius:8px;font-weight:bold;cursor:pointer;margin-top:8px">📸 Click to Upload Pictures (Max 10)</label>
+<small style="color:#666;font-size:11px">First picture na main cover</small>
+<div id="previewBox" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;justify-content:center"></div>
+</div>
+
+<div style="background:#f9f9f9;padding:12px;border-radius:10px;margin:12px 0;border-left:4px solid #333">
+<b style="font-size:13px">👤 SECTION 5: CONTACT</b>
+<input id="upLandlordName" placeholder="Your Name - Agent / Landlord" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+<input id="upPhone" placeholder="Phone Number" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+<input id="upWhatsapp" placeholder="WhatsApp (optional)" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc">
+</div>
+
+<button onclick="submitHouse()" class="gateBtn" style="font-size:16px">✅ Publish Property</button>
+<button onclick="closeUploadModal()" style="width:100%;padding:12px;background:#eee;border:none;border-radius:10px;margin-top:8px">Cancel</button>
+</div></div>
+
+<div id="tenantModal" class="modal"><div class="modalBox"><h3 style="color:#0066cc">🙋 Tenant - Post Your Need</h3><input id="tName" placeholder="Your name" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc"><select id="tType" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc"><option>Self Contain</option><option>1 Bedroom</option><option>2 Bedroom</option><option>3 Bedroom</option></select><select id="tState" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc"><option value="">Select State</option><option value="rivers">Rivers</option><option value="lagos">Lagos</option><option value="fct_abuja">Abuja</option></select><select id="tLGA" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc"><option>Select LGA</option></select><select id="tArea" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc"><option>Select Area</option></select><input id="tBudget" type="number" placeholder="Budget" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc"><textarea id="tDetails" placeholder="Details" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc;height:80px"></textarea><input id="tPhone" placeholder="Phone" style="width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc"><button onclick="submitTenant()" style="width:100%;padding:14px;background:#0066cc;color:#fff;border:none;border-radius:10px;margin-top:12px;font-weight:bold">Post My Need</button><button onclick="document.getElementById('tenantModal').style.display='none'" style="width:100%;padding:12px;background:#eee;border:none;border-radius:10px;margin-top:8px">Cancel</button></div></div>
+
+<script>
+const data={rivers:{'Port Harcourt':['Rumuola','Diobu','GRA Phase 1','GRA Phase 2','Trans-Amadi','Woji','Rumuokwuta','Mile 3','Artillery','Eliozu','Rumuigbo','Rumuokoro'],'Obio-Akpor':['Rumuigbo','Rumuokoro','Eliozu','Mgbuoba','Choba']},lagos:{'Ikeja':['Allen Avenue','Opebi','Ogba','Alausa','Magodo'],'Lekki':['Lekki Phase 1','Ajah','Chevron','VGC'],'Yaba':['Yaba','Akoka']},fct_abuja:{'Abuja Municipal':['Wuse','Garki','Asokoro','Maitama','Jabi','Utako']},kano:{'Kano Municipal':['Sabon Gari','Fagge']},oyo:{'Ibadan North':['Bodija','Sango']},anambra:{'Awka South':['Awka'],'Onitsha North':['Onitsha']},enugu:{'Enugu North':['GRA Enugu']},delta:{'Warri South':['Warri'],'Oshimili South':['Asaba']},imo:{'Owerri Municipal':['Owerri Town']},edo:{'Oredo':['Benin City']},akwa_ibom:{'Uyo':['Uyo']}};
+let curResidence=null,targets=[],currentTab='landlord',uploadedImages=[];
+function showTab(tab){currentTab=tab;document.getElementById('landlordSection').style.display=tab==='landlord'?'block':'none';document.getElementById('tenantSection').style.display=tab==='tenant'?'block':'none';document.getElementById('btnLandlord').classList.toggle('active',tab==='landlord');document.getElementById('btnTenant').classList.toggle('active',tab==='tenant')}
+function goHome(){document.getElementById('searchInput').value='';document.getElementById('uploadModal').style.display='none';document.getElementById('tenantModal').style.display='none';showTab('landlord');document.querySelectorAll('#houseList .card').forEach(c=>c.style.display='block');document.getElementById('filterText').innerText='Home - All Houses';window.scrollTo({top:0,behavior:'smooth'})}
+function filterHouses(areas){document.querySelectorAll('#houseList .card').forEach(c=>{const a=c.getAttribute('data-area');c.style.display=areas.includes(a)?'block':'none'})}
+const cs=document.getElementById('currentState'),cl=document.getElementById('currentLGA'),ca=document.getElementById('currentArea');cs.onchange=()=>{cl.innerHTML='<option>Select LGA</option>';Object.keys(data[cs.value]||{}).forEach(k=>cl.innerHTML+=`<option>${k}</option>`)};
+cl.onchange=()=>{const a=(data[cs.value]||{})[cl.value]||[];ca.innerHTML='<option>Select Area</option>';a.forEach(x=>ca.innerHTML+=`<option>${x}</option>`)};
+ca.onchange=()=>{if(ca.value){curResidence={state:cs.value,lga:cl.value,area:ca.value};document.getElementById('toStep2').disabled=false}};
+document.getElementById('toStep2').onclick=()=>{document.getElementById('step1').style.display='none';document.getElementById('step2').style.display='block';const sl=document.getElementById('searchLGA');sl.innerHTML='<option>Select LGA</option>';Object.values(data).forEach(s=>Object.keys(s).forEach(l=>{if(!Array.from(sl.options).some(o=>o.value===l))sl.innerHTML+=`<option value="${l}">${l}</option>`}))};
+document.getElementById('searchLGA').onchange=function(){let all=[];Object.values(data).forEach(s=>{if(s[this.value])all=s[this.value]});const sa=document.getElementById('searchArea');sa.innerHTML='<option>Select Area</option>';all.forEach(a=>sa.innerHTML+=`<option>${a}</option>`)};
+function addSearchArea(){const l=document.getElementById('searchLGA').value,a=document.getElementById('searchArea').value;if(!a)return;if(targets.find(t=>t.area===a))return;targets.push({lga:l,area:a});const b=document.getElementById('selectedAreas');b.innerHTML='';targets.forEach((t,i)=>b.innerHTML+=`<span class="gateTag" onclick="targets.splice(${i},1);this.remove();if(targets.length==0)document.getElementById('saveAllBtn').disabled=true">${t.lga} - ${t.area} ✕</span>`);document.getElementById('saveAllBtn').disabled=false}
+document.getElementById('saveAllBtn').onclick=()=>{localStorage.setItem('ha_location',JSON.stringify({current:curResidence,targets}));document.getElementById('locationGate').style.display='none';location.reload()};
+function changeArea(){document.getElementById('locationGate').style.display='flex';document.getElementById('step1').style.display='block';document.getElementById('step2').style.display='none';targets=[];document.getElementById('selectedAreas').innerHTML=''}
+function checkUpload(){document.getElementById('uploadModal').style.display='block'}
+function closeUploadModal(){document.getElementById('uploadModal').style.display='none';document.getElementById('previewBox').innerHTML='';uploadedImages=[];document.getElementById('upImages').value=''}
+function previewImages(input){const box=document.getElementById('previewBox');box.innerHTML='';uploadedImages=[];if(input.files.length>10){alert('Max 10 pictures');input.value='';return}Array.from(input.files).forEach(file=>{const reader=new FileReader();reader.onload=e=>{uploadedImages.push(e.target.result);const img=document.createElement('img');img.src=e.target.result;img.className='preview-img';box.appendChild(img)};reader.readAsDataURL(file)})}
+function checkTenantPost(){document.getElementById('tenantModal').style.display='block'}
+function submitHouse(){
+  const title=document.getElementById('upTitle').value||`${document.getElementById('upType').value} - ${document.getElementById('upArea').value}`;
+  const price=document.getElementById('upPrice').value;
+  const dir=document.getElementById('upDirection').value;
+  const area=document.getElementById('upArea').value;
+  const lga=document.getElementById('upLGA').value||document.getElementById('upState').value;
+  const state=document.getElementById('upState').value;
+  const address=document.getElementById('upAddress').value;
+  const phone=document.getElementById('upPhone').value;
+  const type=document.getElementById('upType').value;
+  const bed=document.getElementById('upBed').value;
+  const desc=document.getElementById('upDesc').value;
+  if(!price||!area||!phone||!dir){alert('Fill important: Price, Area, Phone, Direction');return}
+  if(uploadedImages.length===0){if(!confirm('No picture yet. Continue?'))return}
+  const dirLink=`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(dir+', '+area)}`;
+  const mapLink=document.getElementById('upMapLink').value||`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address||dir+', '+area)}`;
+  let facilities=[];
+  if(document.getElementById('fWater')?.checked) facilities.push('Water');
+  if(document.getElementById('fLight')?.checked) facilities.push('Light');
+  if(document.getElementById('fFenced')?.checked) facilities.push('Fenced');
+  if(document.getElementById('fParking')?.checked) facilities.push('Parking');
+  const list=document.getElementById('houseList');
+  const card=document.createElement('div');card.className='card';card.setAttribute('data-area',area);
+  let imgHtml='';
+  if(uploadedImages.length>0){
+    imgHtml=`<div style="position:relative"><img src="${uploadedImages[0]}"><div style="position:absolute;top:8px;left:8px;background:#0a7a0a;color:white;padding:4px 8px;border-radius:6px;font-size:11px">${type}</div><div style="position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.7);color:white;padding:4px 8px;border-radius:12px;font-size:11px">📸 ${uploadedImages.length} pics</div></div>`;
+    if(uploadedImages.length>1){imgHtml+=`<div style="display:flex;gap:4px;padding:6px;background:#fff;overflow-x:auto">`+uploadedImages.map(src=>`<img src="${src}" style="width:60px;height:60px;object-fit:cover;border-radius:6px">`).join('')+`</div>`}
+  } else {imgHtml=`<img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c">`}
+  card.innerHTML=`${imgHtml}<div class="card-body"><span class="badge">${document.getElementById('upFor').value}</span> <b>${title}</b><br><small>📍 ${address||area}, ${lga} | 🛏️ ${bed||'-'} beds | ${facilities.join(', ')}</small><br><b style="color:#0a7a0a;font-size:18px">₦${Number(price).toLocaleString()} / year</b><div class="comment-box"><b>📍 Direction / Comment:</b><br><small>${dir}</small><br><br><b>📝 Description:</b><br><small>${desc||''}</small><a href="${dirLink}" target="_blank" class="dir-btn">🧭 Get Direction</a><a href="${mapLink}" target="_blank" style="display:block;text-align:center;padding:10px;background:#e6f0ff;color:#0a7a0a;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:6px">📍 View on Map</a><a href="tel:${phone}" style="display:block;text-align:center;padding:12px;background:#0066cc;color:white;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:8px">📞 Call ${document.getElementById('upLandlordName').value||'Landlord'}: ${phone}</a></div></div>`;
+  list.prepend(card);
+  closeUploadModal();goHome();
+}
+const tState=document.getElementById('tState'),tLGA=document.getElementById('tLGA'),tArea=document.getElementById('tArea'),tfState=document.getElementById('tenantFilterState'),tfLGA=document.getElementById('tenantFilterLGA'),tfArea=document.getElementById('tenantFilterArea');
+function setupDropdown(s,l,a){if(!s)return;s.onchange=()=>{l.innerHTML='<option>Select LGA</option>';Object.keys(data[s.value]||{}).forEach(k=>l.innerHTML+=`<option value="${k}">${k}</option>`) };l.onchange=()=>{const ars=(data[s.value]||{})[l.value]||[];a.innerHTML='<option>Select Area</option>';ars.forEach(x=>a.innerHTML+=`<option value="${x}">${x}</option>`)}};setupDropdown(tState,tLGA,tArea);setupDropdown(tfState,tfLGA,tfArea);
+function filterTenantSearch(){const ar=tfArea.value;if(!ar){alert('Select State, LGA, Area');return}showTab('landlord');document.querySelectorAll('#houseList .card').forEach(c=>{c.style.display=c.getAttribute('data-area')===ar?'block':'none'});document.getElementById('filterText').innerText=`Showing Houses for: ${ar}`;window.scrollTo({top:0,behavior:'smooth'})}
+function submitTenant(){const n=document.getElementById('tName').value,s=tState.value,l=tLGA.value,a=tArea.value,b=document.getElementById('tBudget').value,p=document.getElementById('tPhone').value;if(!n||!s||!l||!a||!b||!p){alert('Fill all');return}const list=document.getElementById('tenantList');const c=document.createElement('div');c.className='card';c.innerHTML=`<div class="card-body"><b>${n} - Needs ${document.getElementById('tType').value} in ${a}</b><br><small>${l}, ${s} | Budget: ₦${b}</small><div class="comment-box"><small>${document.getElementById('tDetails').value}</small><br><a href="tel:${p}" class="call-btn">📞 Call ${n}</a></div></div>`;list.prepend(c);document.getElementById('tenantModal').style.display='none';showTab('tenant')}
+function searchHouses(){const q=document.getElementById('searchInput').value.toLowerCase();if(!q){goHome();return}document.querySelectorAll('#houseList .card').forEach(c=>c.style.display=c.innerText.toLowerCase().includes(q)?'block':'none')}
+// HOME PAGE FIRST - NO POPUP
+document.getElementById('locationGate').style.display='none';
+if(localStorage.getItem('ha_location')){try{const d=JSON.parse(localStorage.getItem('ha_location'));document.getElementById('userLocationDisplay').innerText=`Stay: ${d.current.area} | Searching: ${d.targets.map(t=>t.area).join(', ')}`;filterHouses(d.targets.map(t=>t.area))}catch(e){}}
+</script>
+</body>
+</html>
