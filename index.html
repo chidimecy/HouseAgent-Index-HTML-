@@ -3,67 +3,132 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>HouseAgentPH - House for Rent in Port Harcourt</title>
+<title>HouseAgentPH - House for Rent in PH & Omoku</title>
 <style>
-body{font-family:Arial,sans-serif;margin:0;background:#f5f5f5}
-.header{background:#0a7a0a;color:white;padding:25px;text-align:center}
-.header h1{margin:0;font-size:28px}
+body{font-family:Arial,sans-serif;margin:0;background:#f2f2f2}
+.header{background:#0a7a0a;color:white;padding:15px;text-align:center;position:sticky;top:0;z-index:100}
+.header h1{margin:0;font-size:22px}
 .container{padding:15px;max-width:650px;margin:auto}
-.upload-box{background:#fff;border:2px dashed #0a7a0a;border-radius:14px;padding:22px;text-align:center;margin-bottom:25px}
-.upload-btn{display:inline-block;background:#0a7a0a;color:white;padding:14px 28px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:10px}
-.card{background:white;border-radius:12px;overflow:hidden;margin-bottom:20px;box-shadow:0 2px 8px rgba(0,0,0,0.1)}
-.card img{width:100%;height:220px;object-fit:cover}
-.card-body{padding:15px}
-.price{color:#0a7a0a;font-weight:bold;font-size:19px}
-.btn{display:block;background:#25D366;color:white;text-align:center;padding:13px;border-radius:8px;text-decoration:none;font-weight:bold;margin-top:12px}
-.footer{text-align:center;padding:20px;color:#666;font-size:14px}
+.upload-box{background:#fff;border:2px dashed #0a7a0a;padding:20px;text-align:center;border-radius:12px;margin-bottom:15px}
+.upload-btn{display:inline-block;background:#0a7a0a;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none;font-weight:bold}
+.card{background:white;border-radius:12px;overflow:hidden;margin-bottom:15px;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+.card img{width:100%;height:200px;object-fit:cover}
+.card-body{padding:12px}
+.filter-bar{background:white;padding:10px;border-radius:10px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;font-size:13px}
+
+/* Location Gate - Best Version */
+#locationGate{position:fixed;inset:0;background:rgba(0,0,0,0.88);z-index:9999;display:flex;align-items:center;justify-content:center;padding:15px}
+.gateBox{background:#fff;width:100%;max-width:420px;border-radius:16px;padding:20px}
+.gateBox h3{margin:0 0 5px;font-size:17px}
+.gateBox select{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #ccc;font-size:15px}
+.gateTag{display:inline-block;background:#e6f0ff;color:#0a7a0a;padding:6px 10px;border-radius:20px;margin:4px;font-size:12px}
+.gateBtn{width:100%;padding:14px;background:#0a7a0a;color:#fff;border:none;border-radius:10px;margin-top:12px;font-weight:bold;font-size:15px}
 </style>
 </head>
 <body>
+
 <div class="header">
-<h1>HouseAgentPH.ng</h1>
-<p>Verified Houses for Rent in Port Harcourt</p>
-<p style="background:white;color:#0a7a0a;display:inline-block;padding:6px 16px;border-radius:20px;margin-top:10px">07039471818</p>
+<h1>HouseAgentPH</h1>
+<div style="font-size:13px" id="userLocationDisplay">Choose your area</div>
 </div>
 
 <div class="container">
+<div class="filter-bar">
+<span id="filterText">Showing houses for your areas</span>
+<button onclick="changeArea()" style="border:1px solid #0a7a0a;color:#0a7a0a;background:white;padding:5px 10px;border-radius:6px">Change Area</button>
+</div>
 
-<!-- LANDLORD UPLOAD SECTION -->
 <div class="upload-box">
-<h2 style="color:#0a7a0a;margin:0 0 5px 0;">🏠 Are you a Landlord / Agent?</h2>
-<p style="margin:5px 0;">List your house here FREE. Upload pictures & video.</p>
-<a class="upload-btn" href="https://forms.gle/PLACEHOLDER" target="_blank">+ Upload Your House (Pictures/Video)</a>
-<p style="font-size:12px;color:#888;margin-top:10px;">Pictures and video will be reviewed and posted within 1 hour.<br>Or send directly to WhatsApp: 07039471818</p>
-<a href="https://wa.me/2347039471818?text=Hello%20HouseAgentPH,%20I%20want%20to%20list%20my%20house%20for%20rent" style="display:inline-block;margin-top:10px;color:#0a7a0a;font-weight:bold;text-decoration:none;">📲 List via WhatsApp Instead</a>
+<h3 style="margin:0 0 8px">Have house for rent?</h3>
+<p style="font-size:13px;color:#555">You must choose area before upload</p>
+<a href="#" class="upload-btn" id="uploadBtn" onclick="checkUpload()">Upload House</a>
 </div>
 
-<!-- HOUSE 1 -->
-<div class="card">
-<img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2" alt="House">
-<div class="card-body">
-<div class="price">₦800,000 / Year</div>
-<h3>2 Bedroom Flat in GRA Phase 2</h3>
-<p>📍 GRA, Port Harcourt. Water, light, fenced.</p>
-<a class="btn" href="https://wa.me/2347039471818?text=Hello%20HouseAgentPH,%20I%20am%20interested%20in%202%20Bedroom%20in%20GRA%20Phase%202">Chat on WhatsApp</a>
-</div>
-</div>
-
-<!-- HOUSE 2 -->
-<div class="card">
-<img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be" alt="House">
-<div class="card-body">
-<div class="price">₦1,200,000 / Year</div>
-<h3>3 Bedroom Flat in Peter Odili Road</h3>
-<p>📍 Trans Amadi, PH. Very spacious.</p>
-<a class="btn" href="https://wa.me/2347039471818?text=Hello%20HouseAgentPH,%20I%20am%20interested%20in%203%20Bedroom%20in%20Peter%20Odili%20Road">Chat on WhatsApp</a>
-</div>
-</div>
+<div class="card"><img src="https://images.unsplash.com/photo-1570129477492-45c003edd2be"><div class="card-body"><b>2 Bedroom Flat - Rumuola</b><br><small>Port Harcourt, Obio-Akpor</small><br><b style="color:#0a7a0a">₦800,000 / year</b></div></div>
+<div class="card"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c"><div class="card-body"><b>Self Contain - Omoku Town</b><br><small>Ogba/Egbema/Ndoni, Rivers</small><br><b style="color:#0a7a0a">₦300,000 / year</b></div></div>
 
 </div>
 
-<div class="footer">
-© 2026 HouseAgentPH.ng - WhatsApp: 07039471818<br>Port Harcourt, Rivers State
+<!-- LOCATION GATE -->
+<div id="locationGate">
+<div class="gateBox">
+<div id="step1">
+<h3>📍 Where you dey stay now?</h3>
+<select id="currentState"><option value="">Select State</option><option value="rivers">Rivers</option><option value="lagos">Lagos</option><option value="fct">FCT - Abuja</option></select>
+<select id="currentLGA"><option>Select State First</option></select>
+<select id="currentArea"><option>Select LGA First</option></select>
+<button class="gateBtn" id="toStep2" disabled>Next →</button>
+</div>
+<div id="step2" style="display:none">
+<h3>🏠 Where you wan find house?</h3>
+<p style="font-size:12px;color:#666;margin:0 0 8px">You fit select MANY. Omoku guy fit choose GRA + Rumuola</p>
+<select id="searchLGA"><option>Select LGA</option></select>
+<select id="searchArea"><option>Select Area</option></select>
+<button onclick="addSearchArea()" style="width:100%;padding:10px;border:1px dashed #0a7a0a;background:#f0fff0;border-radius:8px;margin-top:6px">+ Add Area</button>
+<div id="selectedAreas" style="margin-top:10px"></div>
+<button class="gateBtn" id="saveAllBtn" disabled>Save & See Houses</button>
+</div>
+</div>
 </div>
 
+<script>
+const data = {
+ rivers: { 
+   'Port Harcourt': ['GRA Phase 1','GRA Phase 2','Rumuola','Diobu','Trans-Amadi','Woji','Borikiri','Peter Odili'],
+   'Obio-Akpor': ['Rumuokoro','Eliozu','Mgbuoba','Choba','Rumuigbo','Rumuodara','Rumuosi'],
+   'Ogba/Egbema/Ndoni': ['Omoku Town','Egbema','Obrikom','Ndoni','Mgbede']
+ },
+ lagos: { 'Ikeja': ['Allen Avenue','Opebi'], 'Lekki': ['Lekki Phase 1','Ajah'] },
+ fct: { 'Abuja Municipal': ['Wuse','Garki','Maitama','Asokoro','Gwarimpa'] }
+};
+let curResidence = null; let targets = [];
+
+if(localStorage.getItem('ha_location')){
+  document.getElementById('locationGate').style.display='none';
+  const d = JSON.parse(localStorage.getItem('ha_location'));
+  document.getElementById('userLocationDisplay').innerText = `Stay: ${d.current.area} | Searching: ${d.targets.map(t=>t.area).join(', ')}`;
+}
+
+const cs = document.getElementById('currentState'), cl = document.getElementById('currentLGA'), ca = document.getElementById('currentArea');
+cs.onchange = ()=>{
+  cl.innerHTML='<option value="">Select LGA</option>'; Object.keys(data[cs.value]||{}).forEach(k=>cl.innerHTML+=`<option>${k}</option>`);
+};
+cl.onchange = ()=>{
+  const areas = (data[cs.value]||{})[cl.value]||[]; ca.innerHTML='<option value="">Select Area</option>'; areas.forEach(a=>ca.innerHTML+=`<option>${a}</option>`);
+};
+ca.onchange = ()=>{ if(ca.value){ curResidence={state:cs.value, lga:cl.value, area:ca.value}; document.getElementById('toStep2').disabled=false; } };
+
+document.getElementById('toStep2').onclick = ()=>{
+  document.getElementById('step1').style.display='none'; document.getElementById('step2').style.display='block';
+  const sl = document.getElementById('searchLGA'); sl.innerHTML='<option>Select LGA</option>';
+  Object.values(data).forEach(state=>Object.keys(state).forEach(lga=>sl.innerHTML+=`<option value="${lga}">${lga}</option>`));
+};
+document.getElementById('searchLGA').onchange = function(){
+  let allAreas=[]; Object.values(data).forEach(s=>{ if(s[this.value]) allAreas=s[this.value] });
+  const sa=document.getElementById('searchArea'); sa.innerHTML='<option>Select Area</option>'; allAreas.forEach(a=>sa.innerHTML+=`<option>${a}</option>`);
+};
+
+function addSearchArea(){
+  const lga=document.getElementById('searchLGA').value; const area=document.getElementById('searchArea').value;
+  if(!area) return; targets.push({lga, area}); render();
+}
+function render(){
+  const box=document.getElementById('selectedAreas'); box.innerHTML='';
+  targets.forEach((t,i)=>{ box.innerHTML+=`<span class="gateTag" onclick="removeA(${i})">${t.lga} - ${t.area} ✕</span>` });
+  document.getElementById('saveAllBtn').disabled=targets.length==0;
+}
+function removeA(i){ targets.splice(i,1); render(); }
+
+document.getElementById('saveAllBtn').onclick = ()=>{
+  localStorage.setItem('ha_location', JSON.stringify({current:curResidence, targets}));
+  document.getElementById('locationGate').style.display='none';
+  location.reload();
+};
+function changeArea(){ localStorage.removeItem('ha_location'); location.reload(); }
+function checkUpload(){
+  if(!localStorage.getItem('ha_location')){ alert('Please choose your area first!'); changeArea(); return false; }
+  alert('Now you fit upload house for: ' + JSON.parse(localStorage.getItem('ha_location')).targets.map(t=>t.area).join(', '));
+}
+</script>
 </body>
 </html>
